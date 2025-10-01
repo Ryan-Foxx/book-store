@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # @ Third Party Package
+    # @ Development Apps
+    'books.apps.BooksConfig',
+    
+    # @ Third Party Packages
     'rest_framework',
     'debug_toolbar',
 ]
