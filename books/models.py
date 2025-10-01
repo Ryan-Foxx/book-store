@@ -9,3 +9,12 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Translator(models.Model):
+    name = models.CharField(max_length=255)
+    about = models.TextField(blank=True)
+    datetime_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
