@@ -1,0 +1,40 @@
+# ======================
+# VSCode
+# ======================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# ======================
+# Django / Python
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+.venv/
+ENV/
+env/
+env.bak/
+
+# IDEs
+.idea/
+*.swp
+
+# Django specific
+db.sqlite3
+media/
+staticfiles/
+secret_key_generator.py
