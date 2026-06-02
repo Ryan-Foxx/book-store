@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:18.1
+    container_name: postgres-prod
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+    networks:
+      - book-store-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - book-store-libra-prod:/var/lib/postgresql
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: prod
+    container_name: backend-prod
+    restart: always
+    env_file:
+      - .env.backend.prod
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    networks:
+      - book-store-network
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 config.wsgi:application"
+
+networks:
+  book-store-network:
+    driver: bridge
+
+volumes:
+  book-store-libra-prod:
+    driver: local
