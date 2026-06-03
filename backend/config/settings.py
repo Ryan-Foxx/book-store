@@ -154,6 +154,9 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Authentication Settings Config
+AUTH_USER_MODEL = "users.User"
+
 # CORS settings for frontend access
 # Environment variable format: "http://localhost:3000,https://mydomain.com,https://www.mydomain.com"
 CORS_ALLOWED_ORIGINS_STRING = env.str("CORS_ALLOWED_ORIGINS", default="http://localhost:3000,http://127.0.0.1:3000")
