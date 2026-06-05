@@ -170,7 +170,13 @@ REST_FRAMEWORK = {
 
 # DJOSER SETTINGS
 DJOSER = {
-    "LOGIN_FIELD": env.str('DJOSER_LOGIN_FIELD', 'username'),
+    "LOGIN_FIELD": env.str("DJOSER_LOGIN_FIELD", "username"),
+    "SEND_ACTIVATION_EMAIL": env.bool("DJOSER_SEND_ACTIVATION_EMAIL", True),
+    "SEND_CONFIRMATION_EMAIL": env.bool("DJOSER_SEND_CONFIRMATION_EMAIL", True),
+    "SEND_USERNAME_RESET_EMAIL": env.bool("DJOSER_SEND_USERNAME_RESET_EMAIL", True),
+    "PASSWORD_RESET_CONFIRM_URL": env.str("DJOSER_PASSWORD_RESET_CONFIRM_URL", "reset-password/{uid}/{token}"),
+    "USERNAME_RESET_CONFIRM_URL": env.str("DJOSER_USERNAME_RESET_CONFIRM_URL", "reset-username/{uid}/{token}"),
+    "ACTIVATION_URL": env.str("DJOSER_ACTIVATION_URL", "activate/{uid}/{token}"),
     "SERIALIZERS": {
         "user_create": "apps.users.api.v1.serializers.user.CustomUserCreateSerializer",
         "user": "apps.users.api.v1.serializers.user.CustomUserSerializer",
@@ -180,15 +186,25 @@ DJOSER = {
 
 # SIMPLE JWT SETTINGS
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env.int('JWT_ACCESS_TOKEN_MINUTES', 60)),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=env.int('JWT_REFRESH_TOKEN_DAYS', 1)),
-    'ROTATE_REFRESH_TOKENS': env.bool('JWT_ROTATE_REFRESH_TOKENS', True),
-    'BLACKLIST_AFTER_ROTATION': env.bool('JWT_BLACKLIST_AFTER_ROTATION', True),
-    'AUTH_HEADER_TYPES': env.str('JWT_AUTH_HEADER_TYPE', 'Bearer'),
-    'SIGNING_KEY': env.str('JWT_SIGNING_KEY', SECRET_KEY),
-    'ALGORITHM': env.str('JWT_ALGORITHM', 'HS256'),
-    'UPDATE_LAST_LOGIN': env.bool('JWT_UPDATE_LAST_LOGIN', True),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=env.int("JWT_ACCESS_TOKEN_MINUTES", 60)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=env.int("JWT_REFRESH_TOKEN_DAYS", 1)),
+    "ROTATE_REFRESH_TOKENS": env.bool("JWT_ROTATE_REFRESH_TOKENS", True),
+    "BLACKLIST_AFTER_ROTATION": env.bool("JWT_BLACKLIST_AFTER_ROTATION", True),
+    "AUTH_HEADER_TYPES": env.str("JWT_AUTH_HEADER_TYPE", "Bearer"),
+    "SIGNING_KEY": env.str("JWT_SIGNING_KEY", SECRET_KEY),
+    "ALGORITHM": env.str("JWT_ALGORITHM", "HS256"),
+    "UPDATE_LAST_LOGIN": env.bool("JWT_UPDATE_LAST_LOGIN", True),
 }
+
+# Email Settings Config
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST", "localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", 1025)
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", False)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", False)
+DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL", "noreply@example.com")
 
 # CORS settings for frontend access
 # Environment variable format: "http://localhost:3000,https://mydomain.com,https://www.mydomain.com"

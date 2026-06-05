@@ -37,11 +37,22 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailhog:
+        condition: service_started
     volumes:
       - ./backend:/app
       - ./backend/media:/app/media
       - ./backend/static:/app/static
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: mailhog-dev
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"
+      - "${MAILHOG_UI_PORT:-8025}:8025"
+    networks:
+      - book-store-network
 
 networks:
   book-store-network:
