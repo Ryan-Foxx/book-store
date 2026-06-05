@@ -9,4 +9,5 @@ router.register("users", views.CustomUserViewSet, basename="user")
 urlpatterns = [
     path("auth/", include(router.urls)),
     path("auth/", include("djoser.urls.jwt")),
+    path("auth/logout/", views.LogoutView.as_view(), name="logout"),
 ]
