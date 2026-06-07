@@ -3,9 +3,20 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers.logout import LogoutSerializer
-
+from .throttles import (
+    ActivationRateThrottle,
+    LoginRateThrottle,
+    RegisterRateThrottle,
+    ResendActivationRateThrottle,
+    ResetPasswordConfirmRateThrottle,
+    ResetPasswordRateThrottle,
+    ResetUsernameRateThrottle,
+    SetPasswordRateThrottle,
+    SetUsernameRateThrottle,
+)
 
 class CustomUserViewSet(UserViewSet):
     """
@@ -22,6 +33,33 @@ class CustomUserViewSet(UserViewSet):
 
     http_method_names = ["post", "head", "options"]
 
+    def get_throttles(self):
+        if self.action == "create":
+            self.throttle_classes = [RegisterRateThrottle]
+
+        elif self.action == "activation":
+            self.throttle_classes = [ActivationRateThrottle]
+
+        elif self.action == "resend_activation":
+            self.throttle_classes = [ResendActivationRateThrottle]
+
+        elif self.action == "reset_password":
+            self.throttle_classes = [ResetPasswordRateThrottle]
+
+        elif self.action == "reset_username":
+            self.throttle_classes = [ResetUsernameRateThrottle]
+
+        elif self.action == "reset_password_confirm":
+            self.throttle_classes = [ResetPasswordConfirmRateThrottle]
+
+        elif self.action == "set_password":
+            self.throttle_classes = [SetPasswordRateThrottle]
+
+        elif self.action == "set_username":
+            self.throttle_classes = [SetUsernameRateThrottle]
+
+        return super().get_throttles()
+
     def get_view_name(self):
         action = getattr(self, "action", None)
 
@@ -29,6 +67,10 @@ class CustomUserViewSet(UserViewSet):
             return "User Registration"
 
         return super().get_view_name()
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    throttle_classes = [LoginRateThrottle]
 
 
 class LogoutView(GenericAPIView):

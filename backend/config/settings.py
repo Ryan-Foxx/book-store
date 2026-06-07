@@ -166,6 +166,26 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'apps.users.api.v1.throttles.StrictUserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # global
+        'anon': env.str('THROTTLE_ANON_RATE', '100/hour'),
+        'user': env.str('THROTTLE_USER_RATE', '1000/day'),
+
+        # auth
+        "register": env.str('REGISTER_RATE_THROTTLE', '5/hour'),
+        "login": env.str('LOGIN_RATE_THROTTLE', '5/min'),
+        "activation": env.str('ACTIVATION_RATE_THROTTLE', '10/min'),
+        "resend_activation": env.str('RESEND_ACTIVATION_RATE_THROTTLE', '5/hour'),
+        "reset_password": env.str('RESET_PASSWORD_RATE_THROTTLE', '5/hour'),
+        "reset_password_confirm": env.str('RESET_PASSWORD_CONFIRM_RATE_THROTTLE', '10/min'),
+        "reset_username": env.str('RESET_USERNAME_RATE_THROTTLE', '5/hour'),
+        "set_password": env.str('SET_PASSWORD_RATE_THROTTLE', '5/min'),
+        "set_username": env.str('SET_USERNAME_RATE_THROTTLE', '5/min'),
+    }
 }
 
 # DJOSER SETTINGS
