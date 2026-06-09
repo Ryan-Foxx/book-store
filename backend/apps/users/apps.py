@@ -10,3 +10,4 @@ class UsersConfig(AppConfig):
         import apps.users.signals.create_user_profile
         import apps.users.signals.password_change
         import apps.users.signals.role_change
+        import apps.users.signals.user_profile_avatar
