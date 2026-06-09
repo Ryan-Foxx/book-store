@@ -2,7 +2,7 @@ import os
 import uuid
 
 from apps.users.models import UserProfile
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -43,3 +43,33 @@ def rename_user_profile_avatar(sender, instance, created, **kwargs):
         storage.delete(old_name)
 
         sender.objects.filter(pk=instance.pk).update(avatar=new_path)
+
+
+@receiver(pre_save, sender=UserProfile)
+def delete_old_avatar_on_change(sender, instance, **kwargs):
+    """
+    Delete previous avatar file when a new one is uploaded.
+    Uses Django storage API so it works with any storage backend.
+    """
+
+    if not instance.pk:
+        return
+
+    try:
+        old_profile = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        return
+
+    old_avatar = old_profile.avatar
+    new_avatar = instance.avatar
+
+    if not old_avatar:
+        return
+
+    if old_avatar == new_avatar:
+        return
+
+    storage = old_avatar.storage
+
+    if storage.exists(old_avatar.name):
+        storage.delete(old_avatar.name)
