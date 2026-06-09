@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -43,10 +44,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Development Apps
+    'apps.users.apps.UsersConfig',
 
     # Third Party Packages
     'corsheaders',
     'rest_framework',
+    'djoser',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'debug_toolbar',
 ]
 
@@ -150,6 +157,74 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Authentication Settings Config
+AUTH_USER_MODEL = "users.User"
+
+# REST FRAMEWORK SETTINGS
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'apps.users.api.v1.throttles.StrictUserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # global
+        'anon': env.str('THROTTLE_ANON_RATE', '100/hour'),
+        'user': env.str('THROTTLE_USER_RATE', '1000/day'),
+
+        # auth
+        "register": env.str('REGISTER_RATE_THROTTLE', '5/hour'),
+        "login": env.str('LOGIN_RATE_THROTTLE', '5/min'),
+        "activation": env.str('ACTIVATION_RATE_THROTTLE', '10/min'),
+        "resend_activation": env.str('RESEND_ACTIVATION_RATE_THROTTLE', '5/hour'),
+        "reset_password": env.str('RESET_PASSWORD_RATE_THROTTLE', '5/hour'),
+        "reset_password_confirm": env.str('RESET_PASSWORD_CONFIRM_RATE_THROTTLE', '10/min'),
+        "reset_username": env.str('RESET_USERNAME_RATE_THROTTLE', '5/hour'),
+        "set_password": env.str('SET_PASSWORD_RATE_THROTTLE', '5/min'),
+        "set_username": env.str('SET_USERNAME_RATE_THROTTLE', '5/min'),
+    }
+}
+
+# DJOSER SETTINGS
+DJOSER = {
+    "LOGIN_FIELD": env.str("DJOSER_LOGIN_FIELD", "username"),
+    "SEND_ACTIVATION_EMAIL": env.bool("DJOSER_SEND_ACTIVATION_EMAIL", True),
+    "SEND_CONFIRMATION_EMAIL": env.bool("DJOSER_SEND_CONFIRMATION_EMAIL", True),
+    "SEND_USERNAME_RESET_EMAIL": env.bool("DJOSER_SEND_USERNAME_RESET_EMAIL", True),
+    "PASSWORD_RESET_CONFIRM_URL": env.str("DJOSER_PASSWORD_RESET_CONFIRM_URL", "reset-password/{uid}/{token}"),
+    "USERNAME_RESET_CONFIRM_URL": env.str("DJOSER_USERNAME_RESET_CONFIRM_URL", "reset-username/{uid}/{token}"),
+    "ACTIVATION_URL": env.str("DJOSER_ACTIVATION_URL", "activate/{uid}/{token}"),
+    "SERIALIZERS": {
+        "user_create": "apps.users.api.v1.serializers.user.CustomUserCreateSerializer",
+        "user": "apps.users.api.v1.serializers.user.CustomUserSerializer",
+        "current_user": "apps.users.api.v1.serializers.user.CustomCurrentUserSerializer",
+    },
+}
+
+# SIMPLE JWT SETTINGS
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=env.int("JWT_ACCESS_TOKEN_MINUTES", 60)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=env.int("JWT_REFRESH_TOKEN_DAYS", 1)),
+    "ROTATE_REFRESH_TOKENS": env.bool("JWT_ROTATE_REFRESH_TOKENS", True),
+    "BLACKLIST_AFTER_ROTATION": env.bool("JWT_BLACKLIST_AFTER_ROTATION", True),
+    "AUTH_HEADER_TYPES": env.str("JWT_AUTH_HEADER_TYPE", "Bearer"),
+    "SIGNING_KEY": env.str("JWT_SIGNING_KEY", SECRET_KEY),
+    "ALGORITHM": env.str("JWT_ALGORITHM", "HS256"),
+    "UPDATE_LAST_LOGIN": env.bool("JWT_UPDATE_LAST_LOGIN", True),
+}
+
+# Email Settings Config
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST", "localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", 1025)
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", False)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", False)
+DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL", "noreply@example.com")
 
 # CORS settings for frontend access
 # Environment variable format: "http://localhost:3000,https://mydomain.com,https://www.mydomain.com"
