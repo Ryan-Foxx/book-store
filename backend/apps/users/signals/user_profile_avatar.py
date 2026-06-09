@@ -2,7 +2,7 @@ import os
 import uuid
 
 from apps.users.models import UserProfile
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -73,3 +73,20 @@ def delete_old_avatar_on_change(sender, instance, **kwargs):
 
     if storage.exists(old_avatar.name):
         storage.delete(old_avatar.name)
+
+
+@receiver(post_delete, sender=UserProfile)
+def delete_avatar_on_profile_delete(sender, instance, **kwargs):
+    """
+    Delete avatar file from storage when a UserProfile is deleted.
+    Works with any Django storage backend.
+    """
+
+    if not instance.avatar:
+        return
+
+    avatar = instance.avatar
+    storage = avatar.storage
+
+    if storage.exists(avatar.name):
+        storage.delete(avatar.name)
