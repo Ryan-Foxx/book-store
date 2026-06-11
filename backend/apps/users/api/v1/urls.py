@@ -10,6 +10,8 @@ router.register("users", views.CustomUserViewSet, basename="user")
 urlpatterns = [
     # Users (Djoser)
     path("auth/", include(router.urls)),
+    # User Profile
+    path("auth/profile/me/", views.UserProfileViewSet.as_view(), name="user-profile-me"),
     # JWT
     path("auth/jwt/create/", views.CustomTokenObtainPairView.as_view(), name="jwt-create"),
     path("auth/jwt/refresh/", TokenRefreshView.as_view(), name="jwt-refresh"),

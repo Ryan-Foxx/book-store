@@ -1,11 +1,12 @@
 from djoser.views import UserViewSet
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers.logout import LogoutSerializer
+from .serializers.user_profile import UserProfileSerializer
 from .throttles import (
     ActivationRateThrottle,
     LoginRateThrottle,
@@ -17,6 +18,15 @@ from .throttles import (
     SetPasswordRateThrottle,
     SetUsernameRateThrottle,
 )
+
+
+class UserProfileViewSet(RetrieveUpdateAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
+
 
 class CustomUserViewSet(UserViewSet):
     """
