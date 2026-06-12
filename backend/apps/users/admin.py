@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import User
-
+from .models import User, UserProfile
 
 # Register your models here.
 @admin.register(User)
@@ -58,3 +57,24 @@ class UserAdmin(BaseUserAdmin):
     )
 
     fieldsets = BaseUserAdmin.fieldsets + ((None, {"fields": ("phone_number", "role")}),)
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    model = UserProfile
+    list_display = (
+        "id",
+        "user",
+        "avatar",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user",)
+    ordering = ("-created_at",)
