@@ -1,5 +1,7 @@
+from apps.users.models import UserProfile
 from djoser.views import UserViewSet
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -25,7 +27,10 @@ class UserProfileViewSet(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.profile
+        try:
+            return self.request.user.profile
+        except UserProfile.DoesNotExist:
+            raise NotFound("Profile not found for this user.")
 
 
 class CustomUserViewSet(UserViewSet):
