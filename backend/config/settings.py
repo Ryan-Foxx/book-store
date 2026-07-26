@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     
     # Development Apps
     'apps.users.apps.UsersConfig',
+    'apps.books.apps.BooksConfig',
 
     # Third Party Packages
     'corsheaders',
