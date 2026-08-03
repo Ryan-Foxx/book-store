@@ -46,11 +46,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Development Apps
+    'core.apps.CoreConfig',
     'apps.users.apps.UsersConfig',
+    'apps.books.apps.BooksConfig',
 
     # Third Party Packages
     'corsheaders',
     'rest_framework',
+    'django_filters',
     'djoser',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -165,6 +168,9 @@ AUTH_USER_MODEL = "users.User"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
