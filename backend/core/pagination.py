@@ -1,24 +1,21 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
+from rest_framework.utils.urls import replace_query_param
 
 class BasePagination(PageNumberPagination):
     page_size_query_param = "page_size"
     max_page_size = 50
 
+    def get_previous_link(self):
+        if not self.page.has_previous():
+            return None
+
+        url = self.request.build_absolute_uri()
+        page_number = self.page.previous_page_number()
+
+        return replace_query_param(url, self.page_query_param, page_number)
+
     def get_paginated_response(self, data):
-        previous_link = None
-
-        if self.page.has_previous():
-            prev_page = self.page.previous_page_number()
-            request = self.request
-            base_url = request.build_absolute_uri(request.path)
-
-            if prev_page == 1:
-                previous_link = f"{base_url}?page=1"
-            else:
-                previous_link = f"{base_url}?page={prev_page}"
-
         return Response(
             {
                 "count": self.page.paginator.count,
@@ -26,7 +23,7 @@ class BasePagination(PageNumberPagination):
                 "current_page": self.page.number,
                 "page_size": self.get_page_size(self.request),
                 "next": self.get_next_link(),
-                "previous": previous_link,
+                "previous": self.get_previous_link(),
                 "results": data,
             }
         )
