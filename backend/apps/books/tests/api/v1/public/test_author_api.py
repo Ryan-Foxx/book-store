@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 
 import pytest
 from apps.books.models import Author
@@ -192,7 +192,75 @@ class TestAuthorDetailApi:
         data = response.data
 
         assert response.status_code == status.HTTP_200_OK
-        assert set(data.keys()) == {"id", "name", "avatar", "about", "biography"}
+        assert set(data.keys()) == {"id", "name", "avatar", "about", "biography", "awards"}
+
+    def test_get_author_detail_returns_empty_awards_when_author_has_no_awards(
+        self, api_client, author_factory, public_author_detail_url
+    ):
+        author = author_factory(name="Alice")
+
+        response = api_client.get(public_author_detail_url(author.pk))
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["awards"] == []
+
+    def test_get_author_detail_returns_author_awards(
+        self, api_client, author_factory, award_factory, public_author_detail_url
+    ):
+        author = author_factory(name="J. K. Rowling")
+
+        award = award_factory(title="British Book Award", year_received=date(1998, 5, 10))
+        award.authors.add(author)
+
+        response = api_client.get(public_author_detail_url(author.pk))
+
+        assert response.status_code == status.HTTP_200_OK
+
+        assert response.data["awards"] == [
+            {"id": award.id, "title": "British Book Award", "year_received": "1998-05-10"}
+        ]
+
+    def test_get_author_detail_returns_multiple_awards(
+        self, api_client, author_factory, award_factory, public_author_detail_url
+    ):
+        author = author_factory(name="J. K. Rowling")
+
+        award_1 = award_factory(title="Award One", year_received=date(1997, 1, 1))
+        award_2 = award_factory(title="Award Two", year_received=date(2000, 2, 2))
+
+        award_1.authors.add(author)
+        award_2.authors.add(author)
+
+        response = api_client.get(public_author_detail_url(author.pk))
+
+        awards = response.data["awards"]
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(awards) == 2
+
+        assert {(award["id"], award["title"], award["year_received"]) for award in awards} == {
+            (award_1.id, "Award One", "1997-01-01"),
+            (award_2.id, "Award Two", "2000-02-02"),
+        }
+
+    def test_get_author_detail_does_not_return_other_authors_awards(
+        self, api_client, author_factory, award_factory, public_author_detail_url
+    ):
+        target_author = author_factory(name="J. K. Rowling")
+        another_author = author_factory(name="George Orwell")
+
+        target_award = award_factory(title="Target Author Award")
+        other_award = award_factory(title="Other Author Award")
+
+        target_award.authors.add(target_author)
+        other_award.authors.add(another_author)
+
+        response = api_client.get(public_author_detail_url(target_author.pk))
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["awards"] == [
+            {"id": target_award.id, "title": "Target Author Award", "year_received": None}
+        ]
 
     def test_get_author_detail_not_found(self, api_client, public_author_detail_url):
         response = api_client.get(public_author_detail_url(999))

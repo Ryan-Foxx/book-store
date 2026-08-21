@@ -1,5 +1,5 @@
 import pytest
-from apps.books.models import Author
+from apps.books.models import Author, Award
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient
@@ -49,6 +49,25 @@ def author_factory(db):
         return Author.objects.create(**defaults)
 
     return create_author
+
+
+@pytest.fixture
+def award_factory(db):
+    counter = {"value": 0}
+
+    def create_award(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        defaults = {
+            "title": f"Award {index}",
+            "year_received": None,
+        }
+        defaults.update(kwargs)
+
+        return Award.objects.create(**defaults)
+
+    return create_award
 
 
 # =========== Users ===========
