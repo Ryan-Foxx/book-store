@@ -2,8 +2,7 @@ from unittest.mock import patch
 
 import pytest
 from apps.books.utils.paths import author_avatar_upload_path
-from django.db import IntegrityError
-
+from django.db import IntegrityError, transaction
 
 @pytest.mark.django_db
 class TestAuthorModel:
@@ -12,7 +11,8 @@ class TestAuthorModel:
         author_factory(name="J. K. Rowling")
 
         with pytest.raises(IntegrityError):
-            author_factory(name="J. K. Rowling")
+            with transaction.atomic():
+                author_factory(name="J. K. Rowling")
 
     def test_author_str_returns_name(self, author_factory):
         author = author_factory(name="J. K. Rowling")
