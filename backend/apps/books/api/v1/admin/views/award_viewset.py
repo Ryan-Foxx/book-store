@@ -1,3 +1,4 @@
+from apps.books.api.v1.admin.filters.award_filters import AwardFilter
 from apps.books.api.v1.admin.pagination.award_pagination import AwardPagination
 from apps.books.api.v1.admin.serializers.award_serializers import (
     AwardReadSerializer,
@@ -9,6 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 class AwardViewSet(ModelViewSet):
     pagination_class = AwardPagination
+    filterset_class = AwardFilter
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
