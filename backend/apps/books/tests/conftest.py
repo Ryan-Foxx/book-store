@@ -136,3 +136,16 @@ def admin_author_detail_url():
         return reverse("admin-author-detail", kwargs={"pk": author_id})
 
     return url
+
+
+@pytest.fixture
+def admin_award_list_url():
+    return reverse("admin-award-list")
+
+
+@pytest.fixture
+def admin_award_detail_url():
+    def url(award_id):
+        return reverse("admin-award-detail", kwargs={"pk": award_id})
+
+    return url
