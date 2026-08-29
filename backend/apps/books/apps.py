@@ -7,3 +7,6 @@ class BooksConfig(AppConfig):
 
     def ready(self):
         import apps.books.signals.author_avatar
+        import apps.books.signals.translator_avatar
+        import apps.books.signals.publisher_avatar
+        import apps.books.signals.book_avatar
