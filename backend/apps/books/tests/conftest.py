@@ -1,5 +1,15 @@
+import datetime
+
 import pytest
-from apps.books.models import Author, Award
+from apps.books.models import (
+    Author,
+    Award,
+    Book,
+    Category,
+    Language,
+    Publisher,
+    Translator,
+)
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient
@@ -68,6 +78,123 @@ def award_factory(db):
         return Award.objects.create(**defaults)
 
     return create_award
+
+
+@pytest.fixture
+def translator_factory(db):
+    counter = {"value": 0}
+
+    def create_translator(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        defaults = {
+            "name": f"Translator {index}",
+            "about": f"About Translator {index}",
+            "avatar": None,
+        }
+        defaults.update(kwargs)
+
+        return Translator.objects.create(**defaults)
+
+    return create_translator
+
+
+@pytest.fixture
+def publisher_factory(db):
+    counter = {"value": 0}
+
+    def create_publisher(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        defaults = {
+            "name": f"Publisher {index}",
+            "about": f"About Publisher {index}",
+            "avatar": None,
+        }
+        defaults.update(kwargs)
+
+        return Publisher.objects.create(**defaults)
+
+    return create_publisher
+
+
+@pytest.fixture
+def category_factory(db):
+    counter = {"value": 0}
+
+    def create_category(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        defaults = {
+            "title": f"Category {index}",
+            "description": f"Description for category {index}",
+        }
+        defaults.update(kwargs)
+
+        return Category.objects.create(**defaults)
+
+    return create_category
+
+
+@pytest.fixture
+def language_factory(db):
+    counter = {"value": 0}
+
+    def create_language(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        defaults = {
+            "name": f"Language {index}",
+        }
+        defaults.update(kwargs)
+
+        return Language.objects.create(**defaults)
+
+    return create_language
+
+
+@pytest.fixture
+def book_factory(db, language_factory):
+    counter = {"value": 0}
+
+    def create_book(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        authors = kwargs.pop("authors", None)
+        translators = kwargs.pop("translators", None)
+        categories = kwargs.pop("category", None)
+
+        if "language" not in kwargs:
+            kwargs["language"] = language_factory()
+
+        defaults = {
+            "name": f"Book {index}",
+            "price": 50000,
+            "number_of_pages": 200,
+            "publication_date": datetime.date(2025, 1, 1),
+            "inventory": 10,
+            "is_active": True,
+            "avatar": None,
+        }
+        defaults.update(kwargs)
+
+        book = Book.objects.create(**defaults)
+
+        if authors is not None:
+            book.authors.set(authors)
+        if translators is not None:
+            book.translators.set(translators)
+        if categories is not None:
+            book.category.set(categories)
+
+        return book
+
+    return create_book
 
 
 # =========== Users ===========
