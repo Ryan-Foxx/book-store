@@ -276,3 +276,16 @@ def admin_award_detail_url():
         return reverse("admin-award-detail", kwargs={"pk": award_id})
 
     return url
+
+
+@pytest.fixture
+def admin_translator_list_url():
+    return reverse("admin-translator-list")
+
+
+@pytest.fixture
+def admin_translator_detail_url():
+    def url(translator_id):
+        return reverse("admin-translator-detail", kwargs={"pk": translator_id})
+
+    return url
