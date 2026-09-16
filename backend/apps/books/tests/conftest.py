@@ -289,3 +289,16 @@ def admin_translator_detail_url():
         return reverse("admin-translator-detail", kwargs={"pk": translator_id})
 
     return url
+
+
+@pytest.fixture
+def admin_publisher_list_url():
+    return reverse("admin-publisher-list")
+
+
+@pytest.fixture
+def admin_publisher_detail_url():
+    def url(publisher_id):
+        return reverse("admin-publisher-detail", kwargs={"pk": publisher_id})
+
+    return url
