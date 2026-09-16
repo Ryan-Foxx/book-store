@@ -302,3 +302,16 @@ def admin_publisher_detail_url():
         return reverse("admin-publisher-detail", kwargs={"pk": publisher_id})
 
     return url
+
+
+@pytest.fixture
+def admin_category_list_url():
+    return reverse("admin-category-list")
+
+
+@pytest.fixture
+def admin_category_detail_url():
+    def url(category_id):
+        return reverse("admin-category-detail", kwargs={"pk": category_id})
+
+    return url
