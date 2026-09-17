@@ -1,3 +1,4 @@
+from apps.books.api.v1.public.filters.translator_filters import TranslatorFilter
 from apps.books.api.v1.public.pagination.translator_pagination import (
     TranslatorPagination,
 )
@@ -15,6 +16,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 # Create your views here.
 class TranslatorViewSet(ReadOnlyModelViewSet):
     pagination_class = TranslatorPagination
+    filterset_class = TranslatorFilter
 
     def get_serializer_class(self):
         if self.action == "list":
