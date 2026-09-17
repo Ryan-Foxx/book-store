@@ -315,3 +315,16 @@ def admin_category_detail_url():
         return reverse("admin-category-detail", kwargs={"pk": category_id})
 
     return url
+
+
+@pytest.fixture
+def admin_language_list_url():
+    return reverse("admin-language-list")
+
+
+@pytest.fixture
+def admin_language_detail_url():
+    def url(language_id):
+        return reverse("admin-language-detail", kwargs={"pk": language_id})
+
+    return url
