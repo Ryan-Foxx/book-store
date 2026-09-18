@@ -264,6 +264,19 @@ def public_translator_detail_url():
     return url
 
 
+@pytest.fixture
+def public_publisher_list_url():
+    return reverse("public-publisher-list")
+
+
+@pytest.fixture
+def public_publisher_detail_url():
+    def url(publisher_id):
+        return reverse("public-publisher-detail", kwargs={"pk": publisher_id})
+
+    return url
+
+
 # =========== Admin Routes ===========
 @pytest.fixture
 def admin_author_list_url():
