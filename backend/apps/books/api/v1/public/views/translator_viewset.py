@@ -10,10 +10,15 @@ from apps.books.selectors.translator_selectors import (
     get_public_translator_detail_queryset,
     get_public_translator_list_queryset,
 )
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 
 # Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all translators", tags=["Public - Translators"], auth=[]),
+    retrieve=extend_schema(summary="Retrieve translator details", tags=["Public - Translators"], auth=[]),
+)
 class TranslatorViewSet(ReadOnlyModelViewSet):
     pagination_class = TranslatorPagination
     filterset_class = TranslatorFilter

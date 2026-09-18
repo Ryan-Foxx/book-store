@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'debug_toolbar',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -166,6 +167,7 @@ AUTH_USER_MODEL = "users.User"
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -191,7 +193,46 @@ REST_FRAMEWORK = {
         "reset_username": env.str('RESET_USERNAME_RATE_THROTTLE', '5/hour'),
         "set_password": env.str('SET_PASSWORD_RATE_THROTTLE', '5/min'),
         "set_username": env.str('SET_USERNAME_RATE_THROTTLE', '5/min'),
-    }
+    },
+}
+
+# DRF_SPECTACULAR SETTINGS
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Bookstore Project API',
+    'DESCRIPTION': 'Public & Admin Endpoints documentation',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    'SCHEMA_PATH_PREFIX': r'/api/v[0-9]+',
+
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'jwtAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+                'description': 'Enter your JWT access token without the "Bearer" prefix.',
+            }
+        }
+    },
+
+    'SECURITY': [
+        {'jwtAuth': []},
+    ],
+
+    # Adding Server Addresses (Base URL)
+    'SERVERS': [
+        {
+            'url': 'http://localhost:8000',
+            'description': 'Local Development Server',
+        },
+    ],
+
+    'SWAGGER_UI_SETTINGS': {
+            'filter': True, 
+            'persistAuthorization': True,
+            'displayRequestDuration': True,
+            'defaultModelsExpandDepth': -1,
+    },
 }
 
 # DJOSER SETTINGS
