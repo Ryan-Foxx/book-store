@@ -8,10 +8,15 @@ from apps.books.selectors.publisher_selectors import (
     get_public_publisher_detail_queryset,
     get_public_publisher_list_queryset,
 )
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 
 # Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all publishers", tags=["Public - Publishers"], auth=[]),
+    retrieve=extend_schema(summary="Retrieve publisher details", tags=["Public - Publishers"], auth=[]),
+)
 class PublisherViewSet(ReadOnlyModelViewSet):
     pagination_class = PublisherPagination
     filterset_class = PublisherFilter
