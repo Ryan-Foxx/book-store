@@ -1,3 +1,4 @@
+from apps.books.api.v1.public.filters.category_filters import CategoryFilter
 from apps.books.api.v1.public.pagination.category_pagination import (
     CategoryPagination,
 )
@@ -15,6 +16,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 # Create your views here.
 class CategoryViewSet(ReadOnlyModelViewSet):
     pagination_class = CategoryPagination
+    filterset_class = CategoryFilter
 
     def get_serializer_class(self):
         if self.action == "list":
