@@ -7,6 +7,10 @@
         @apply font-DanaRegular;
     }
 
+    a.active {
+        @apply text-orange-500;
+    }
+
     /* ---------------- Add Font-Face ---------------- */
 
     /* Dana Font-Face */
