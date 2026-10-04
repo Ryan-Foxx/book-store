@@ -38,6 +38,20 @@ services:
       db:
         condition: service_healthy
     command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 config.wsgi:application"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: prod
+    container_name: frontend-prod
+    restart: always
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - book-store-network
+    depends_on:
+      - backend
+    command: sh -c "npm run start"
 
 networks:
   book-store-network:
