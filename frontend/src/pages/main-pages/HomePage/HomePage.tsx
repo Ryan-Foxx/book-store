@@ -1,10 +1,16 @@
+import { Link } from "react-router-dom";
 import { HiOutlineSearch } from "react-icons/hi";
+
+import { POPULAR_CATEGORIES } from "./constants/popular-categories";
+import type { CategoryCardProps } from "./types/category";
+
 import heroImage from "@/assets/images/hero-book.png";
 
 function HomePage() {
     return (
         <>
             <HeroSection />
+            <PopularCategories />
         </>
     );
 }
@@ -56,5 +62,58 @@ function HeroSection() {
                 </div>
             </section>
         </>
+    );
+}
+
+// Main Section: Popular Categories Component
+function PopularCategories() {
+    return (
+        <section
+            className="py-10 sm:py-14"
+            aria-labelledby="popular-categories-heading"
+        >
+            <div className="container">
+                {/* Section Title */}
+                <div className="mb-6 sm:mb-8">
+                    <h2
+                        id="popular-categories-heading"
+                        className="font-MorabbaBold text-xl text-slate-900 sm:text-2xl"
+                    >
+                        محبوب ترین دسته بندی‌ها
+                    </h2>
+                </div>
+
+                <div className="xs:grid-cols-2 grid grid-cols-1 gap-3.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                    {POPULAR_CATEGORIES.map((category) => (
+                        <CategoryCard key={category.id} category={category} />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// Sub-Component: Single Category Card
+function CategoryCard({ category }: CategoryCardProps) {
+    return (
+        <Link
+            to={category.link || "#"}
+            className="group flex items-center justify-between overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/70 p-3 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-slate-200 hover:bg-white hover:shadow-md sm:p-4"
+        >
+            {/* Category Title */}
+            <span className="font-DanaMedium text-sm text-slate-800 transition-colors group-hover:text-orange-500 sm:text-base">
+                {category.title}
+            </span>
+
+            {/* Category Thumbnail / Illustration */}
+            <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl sm:h-14 sm:w-14">
+                <img
+                    src={category.image}
+                    alt={category.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    loading="lazy"
+                />
+            </div>
+        </Link>
     );
 }
