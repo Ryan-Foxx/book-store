@@ -3,7 +3,12 @@ import { HiOutlineSearch } from "react-icons/hi";
 
 import { BOOKS } from "./constants/books";
 import { POPULAR_CATEGORIES } from "./constants/popular-categories";
-import type { CategoryCardProps } from "./types/category";
+import type { CategoryCardProps } from "./types/popular-category";
+import type {
+    SuggestedBookCardProps,
+    SuggestedBookInfoProps,
+    SuggestedBooksProps,
+} from "./types/suggested-book";
 
 import heroImage from "@/assets/images/hero-book.png";
 import BookList from "@/components/BookList";
@@ -14,12 +19,14 @@ function HomePage() {
             <HeroSection />
             <PopularCategories />
             <BookList books={BOOKS} sectionTitle="محبوب‌ترین کتاب‌ها" />
+            <SuggestedBooks books={BOOKS} />
         </>
     );
 }
 
 export default HomePage;
 
+// ==============================================================================================================================
 function HeroSection() {
     return (
         <>
@@ -68,7 +75,7 @@ function HeroSection() {
     );
 }
 
-// Main Section: Popular Categories Component
+// ========================================== Main Section: Popular Categories Component ==========================================
 function PopularCategories() {
     return (
         <section
@@ -118,5 +125,74 @@ function CategoryCard({ category }: CategoryCardProps) {
                 />
             </div>
         </Link>
+    );
+}
+
+// ========================================== Utils & Helpers: SuggestedBooks ==========================================
+const priceFormatter = new Intl.NumberFormat("fa-IR");
+
+function formatPrice(price: number): string {
+    return `${priceFormatter.format(price)} تومان`;
+}
+
+// Main Section: SuggestedBooks
+function SuggestedBooks({ books }: SuggestedBooksProps) {
+    return (
+        <section className="bg-slate-50 py-8 sm:py-12">
+            <div className="container">
+                <h2 className="font-MorabbaBold mb-6 text-lg text-slate-900 sm:text-2xl">
+                    {"کتاب‌های پیشنهادی"}
+                </h2>
+
+                <div className="xs:grid-cols-2 grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-4">
+                    {books.map((book) => (
+                        <SuggestedBookCard key={book.id} book={book} />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// Sub-Components: SuggestedBooks
+function SuggestedBookCard({ book }: SuggestedBookCardProps) {
+    return (
+        <article className="group flex items-stretch justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60">
+            {/* Text Content (Right side in RTL) */}
+            <SuggestedBookInfo book={book} />
+
+            {/* Book Cover (Left side in RTL) */}
+            <div className="h-28 w-20 shrink-0 overflow-hidden rounded-md sm:h-32 sm:w-24">
+                <img
+                    src={book.cover}
+                    alt={`جلد کتاب ${book.title}`}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                />
+            </div>
+        </article>
+    );
+}
+
+function SuggestedBookInfo({ book }: SuggestedBookInfoProps) {
+    return (
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-y-2">
+            <h3
+                className="font-DanaMedium line-clamp-2 text-sm leading-6 text-slate-800"
+                title={book.title}
+            >
+                <Link
+                    to={`books/${book.id}`}
+                    className="rounded-sm transition-colors duration-200 hover:text-orange-600 focus:ring-1 focus:ring-orange-400 focus:outline-none"
+                >
+                    {book.title}
+                </Link>
+            </h3>
+
+            {/* Price */}
+            <span className="font-DanaMedium text-xs whitespace-nowrap text-slate-900 sm:text-sm">
+                {formatPrice(book.price)}
+            </span>
+        </div>
     );
 }

@@ -7,7 +7,7 @@ import romance from "@/assets/images/categories/romance.png";
 import psychology from "@/assets/images/categories/psychology.png";
 import action from "@/assets/images/categories/action.png";
 
-import type { CategoryItem } from "@/pages/main-pages/HomePage/types/category";
+import type { CategoryItem } from "@/pages/main-pages/HomePage/types/popular-category";
 
 export const POPULAR_CATEGORIES: CategoryItem[] = [
     {
