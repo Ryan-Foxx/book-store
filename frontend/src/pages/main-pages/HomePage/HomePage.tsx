@@ -20,6 +20,7 @@ function HomePage() {
             <PopularCategories />
             <BookList books={BOOKS} sectionTitle="محبوب‌ترین کتاب‌ها" />
             <SuggestedBooks books={BOOKS} />
+            <NewsletterSection />
         </>
     );
 }
@@ -79,7 +80,7 @@ function HeroSection() {
 function PopularCategories() {
     return (
         <section
-            className="py-10 sm:py-14"
+            className="bg-slate-50 py-10 sm:py-14"
             aria-labelledby="popular-categories-heading"
         >
             <div className="container">
@@ -194,5 +195,51 @@ function SuggestedBookInfo({ book }: SuggestedBookInfoProps) {
                 {formatPrice(book.price)}
             </span>
         </div>
+    );
+}
+
+// ========================================== Newsletter Section (Static UI) ==========================================
+function NewsletterSection() {
+    return (
+        <section className="py-16 sm:py-20">
+            <div className="container mx-auto px-4">
+                <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+                    {/* Title */}
+                    <h2
+                        id="newsletter-title"
+                        className="font-MorabbaBold text-2xl text-slate-800 sm:text-3xl"
+                    >
+                        به اجتماع ما بپیوندید!
+                    </h2>
+
+                    {/* Description */}
+                    <p className="font-Dana mt-3 max-w-xl text-xs leading-6 text-slate-500 sm:text-sm sm:leading-7">
+                        آدرس ایمیل خود را برای دریافت به‌روزرسانی‌های منظم و
+                        همچنین اخبار رویدادهای آینده و پیشنهادات خاص وارد کنید.
+                    </p>
+
+                    {/* Static Form */}
+                    <form
+                        onSubmit={(e) => e.preventDefault()}
+                        className="mt-8 flex w-full max-w-md items-center rounded-full bg-white p-1.5 shadow-sm ring-1 ring-slate-200 focus-within:ring-2 focus-within:ring-slate-800"
+                    >
+                        {/* Submit Button */}
+                        <button
+                            type="button"
+                            className="font-DanaMedium shrink-0 rounded-full bg-slate-900 px-6 py-2 text-xs text-white transition-colors duration-200 hover:bg-slate-800 sm:px-8 sm:py-2.5 sm:text-sm"
+                        >
+                            ثبت
+                        </button>
+
+                        {/* Input Field */}
+                        <input
+                            type="email"
+                            placeholder="ایمیل خود را وارد کنید"
+                            className="font-Dana min-w-0 flex-1 bg-transparent px-4 text-xs text-slate-700 placeholder-slate-400 outline-none sm:text-sm"
+                        />
+                    </form>
+                </div>
+            </div>
+        </section>
     );
 }
