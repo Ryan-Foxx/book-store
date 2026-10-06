@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import { HiOutlineSearch } from "react-icons/hi";
 
+import { BOOKS } from "./constants/books";
 import { POPULAR_CATEGORIES } from "./constants/popular-categories";
 import type { CategoryCardProps } from "./types/category";
 
 import heroImage from "@/assets/images/hero-book.png";
+import BookList from "@/components/BookList";
 
 function HomePage() {
     return (
         <>
             <HeroSection />
             <PopularCategories />
+            <BookList books={BOOKS} sectionTitle="محبوب‌ترین کتاب‌ها" />
         </>
     );
 }
