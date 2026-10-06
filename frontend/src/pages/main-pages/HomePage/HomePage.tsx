@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { HiOutlineSearch } from "react-icons/hi";
+import { HiChevronDown } from "react-icons/hi2";
 
 import { BOOKS } from "./constants/books";
+import { FAQ_ITEMS } from "./constants/faq";
 import { POPULAR_CATEGORIES } from "./constants/popular-categories";
+
+import type { FaqItemProps } from "./types/faq";
 import type { CategoryCardProps } from "./types/popular-category";
 import type {
     SuggestedBookCardProps,
@@ -20,6 +25,7 @@ function HomePage() {
             <PopularCategories />
             <BookList books={BOOKS} sectionTitle="محبوب‌ترین کتاب‌ها" />
             <SuggestedBooks books={BOOKS} />
+            <FaqSection />
             <NewsletterSection />
         </>
     );
@@ -198,10 +204,102 @@ function SuggestedBookInfo({ book }: SuggestedBookInfoProps) {
     );
 }
 
+// ========================================== Main Section: FaqSection Component ==========================================
+function FaqSection() {
+    // Track the ID of the currently open accordion (null if all closed)
+    const [openId, setOpenId] = useState<number | null>(null);
+
+    const toggleAccordion = (id: number) => {
+        setOpenId(openId === id ? null : id);
+    };
+
+    return (
+        <section className="py-12 sm:py-16">
+            <div className="container mx-auto max-w-3xl px-4">
+                {/* Header */}
+                <div className="mb-8 text-center sm:mb-12">
+                    <h2
+                        id="faq-title"
+                        className="font-MorabbaBold text-2xl text-slate-900 sm:text-3xl"
+                    >
+                        سوالات متداول
+                    </h2>
+                    <p className="font-Dana mt-2 text-xs text-slate-500 sm:text-sm">
+                        پاسخ به پرتکرارترین سوالات کاربران فصل کتاب
+                    </p>
+                </div>
+
+                {/* FAQ List */}
+                <div className="flex flex-col gap-3 sm:gap-4">
+                    {FAQ_ITEMS.map((faq) => (
+                        <FaqItem
+                            key={faq.id}
+                            faq={faq}
+                            isOpen={openId === faq.id}
+                            onToggle={() => toggleAccordion(faq.id)}
+                        />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// Sub-Component: FaqItem (Controlled)
+function FaqItem({ faq, isOpen, onToggle }: FaqItemProps) {
+    return (
+        <div
+            className={`rounded-xl border transition-all duration-200 ${
+                isOpen
+                    ? "border-slate-300 bg-white shadow-sm"
+                    : "border-slate-200 bg-slate-50/50 hover:border-slate-300"
+            }`}
+        >
+            {/* Accordion Trigger Button */}
+            <button
+                type="button"
+                onClick={onToggle}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${faq.id}`}
+                className="flex w-full items-center justify-between gap-4 p-4 text-right focus:outline-none sm:p-5"
+            >
+                <span
+                    className={`font-DanaMedium text-xs transition-colors duration-200 sm:text-sm md:text-base ${
+                        isOpen ? "text-blue-600" : "text-slate-800"
+                    }`}
+                >
+                    {faq.question}
+                </span>
+
+                <HiChevronDown
+                    className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : ""
+                    }`}
+                    aria-hidden="true"
+                />
+            </button>
+
+            {/* Collapsible Content */}
+            <div
+                id={`faq-answer-${faq.id}`}
+                className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                    isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+            >
+                <div className="overflow-hidden">
+                    <p className="font-Dana border-t border-slate-100 p-4 pt-3 text-xs leading-6 text-slate-600 sm:p-5 sm:pt-4 sm:text-sm sm:leading-7">
+                        {faq.answer}
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ========================================== Newsletter Section (Static UI) ==========================================
 function NewsletterSection() {
     return (
-        <section className="py-16 sm:py-20">
+        <section className="bg-slate-50 py-16 sm:py-20">
             <div className="container mx-auto px-4">
                 <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
                     {/* Title */}
