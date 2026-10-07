@@ -214,7 +214,7 @@ function FaqSection() {
     };
 
     return (
-        <section className="py-12 sm:py-16">
+        <section className="py-12 sm:py-16" id="faq-section">
             <div className="container mx-auto max-w-3xl px-4">
                 {/* Header */}
                 <div className="mb-8 text-center sm:mb-12">
