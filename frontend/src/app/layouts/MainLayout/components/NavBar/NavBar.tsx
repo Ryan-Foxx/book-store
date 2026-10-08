@@ -42,59 +42,62 @@ function NavBar() {
     };
 
     return (
-        <header className="w-full bg-white shadow-xs">
-            <div className="container">
-                <nav className="flex h-16 items-center justify-between sm:h-20">
-                    {/* Brand & Mobile Hamburger */}
-                    <div className="flex items-center gap-x-2 sm:gap-x-3">
-                        <button
-                            type="button"
-                            onClick={handleToggleMenu}
-                            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 sm:h-10 sm:w-10 lg:hidden"
-                        >
-                            <HiOutlineMenu className="h-5 w-5 sm:h-6 sm:w-6" />
-                        </button>
-                        <NavBrand />
-                    </div>
+        <>
+            {/* Header stays sticky with full blur effect */}
+            <header className="sticky top-0 z-30 w-full border-b border-slate-100 bg-white/95 shadow-xs backdrop-blur-md">
+                <div className="container">
+                    <nav className="flex h-16 items-center justify-between sm:h-20">
+                        {/* Brand & Hamburger */}
+                        <div className="flex items-center gap-x-2 sm:gap-x-3">
+                            <button
+                                type="button"
+                                onClick={handleToggleMenu}
+                                className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 sm:h-10 sm:w-10 lg:hidden"
+                            >
+                                <HiOutlineMenu className="h-5 w-5 sm:h-6 sm:w-6" />
+                            </button>
+                            <NavBrand />
+                        </div>
 
-                    {/* Desktop Navigation Links */}
-                    <div className="hidden lg:block">
-                        <ul className="font-DanaDemiBold flex items-center gap-x-6 text-base text-slate-700 *:transition-colors *:hover:text-orange-500 xl:gap-x-8 xl:text-lg">
-                            {NAV_LINKS.map((link) => (
-                                <li key={link.id}>
-                                    <NavLink to={link.address}>
-                                        {link.title}
-                                    </NavLink>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                        {/* Desktop Navigation Links */}
+                        <div className="hidden lg:block">
+                            <ul className="font-DanaDemiBold flex items-center gap-x-6 text-base text-slate-700 *:transition-colors *:hover:text-orange-500 xl:gap-x-8 xl:text-lg">
+                                {NAV_LINKS.map((link) => (
+                                    <li key={link.id}>
+                                        <NavLink to={link.address}>
+                                            {link.title}
+                                        </NavLink>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-                    {/* Cart & Auth Controls */}
-                    <div className="flex items-center gap-x-2 sm:gap-x-5">
-                        <button
-                            type="button"
-                            className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 sm:h-10 sm:w-10"
-                        >
-                            <HiOutlineShoppingCart className="h-5 w-5 sm:h-7 sm:w-7" />
-                        </button>
+                        {/* Cart & Auth Controls */}
+                        <div className="flex items-center gap-x-2 sm:gap-x-5">
+                            <button
+                                type="button"
+                                className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 sm:h-10 sm:w-10"
+                            >
+                                <HiOutlineShoppingCart className="h-5 w-5 sm:h-7 sm:w-7" />
+                            </button>
 
-                        <NavUserAuth
-                            isLogin={isLogin}
-                            onToggleLogin={handleToggleLogin}
-                        />
-                    </div>
-                </nav>
-            </div>
+                            <NavUserAuth
+                                isLogin={isLogin}
+                                onToggleLogin={handleToggleLogin}
+                            />
+                        </div>
+                    </nav>
+                </div>
+            </header>
 
-            {/* Mobile Sidebar */}
+            {/* Mobile Sidebar is OUTSIDE header so fixed positioning is viewport-relative */}
             <NavMobileDrawer
                 isOpen={isMenuOpen}
                 isLogin={isLogin}
                 onClose={handleCloseMenu}
                 onToggleLogin={handleToggleLogin}
             />
-        </header>
+        </>
     );
 }
 
