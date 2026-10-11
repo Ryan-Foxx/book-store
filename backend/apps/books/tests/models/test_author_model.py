@@ -25,7 +25,7 @@ class TestAuthorModel:
 
             path = author_avatar_upload_path(instance=None, filename="avatar.jpg")
 
-        assert path == "authors/avatars/fixeduuidhex.jpg"
+        assert path == "books/authors/avatars/fixeduuidhex.jpg"
 
     def test_author_avatar_upload_path_preserves_file_extension(self):
         with patch("apps.books.utils.paths.uuid.uuid4") as mock_uuid4:
@@ -33,4 +33,4 @@ class TestAuthorModel:
 
             path = author_avatar_upload_path(instance=None, filename="profile.png")
 
-        assert path == "authors/avatars/fixeduuidhex.png"
+        assert path == "books/authors/avatars/fixeduuidhex.png"

@@ -5,9 +5,13 @@ from apps.books.models import (
     Author,
     Award,
     Book,
+    BookDetail,
     Category,
+    Comment,
+    Favorite,
     Language,
     Publisher,
+    Rating,
     Translator,
 )
 from django.contrib.auth import get_user_model
@@ -195,6 +199,97 @@ def book_factory(db, language_factory):
         return book
 
     return create_book
+
+
+@pytest.fixture
+def book_detail_factory(db, book_factory):
+    counter = {"value": 0}
+
+    def create_book_detail(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        defaults = {
+            "order": index,
+            "section_type": BookDetail.SECTION_TYPE_TEXT,
+            "text": f"Sample detail text {index}",
+            "image": None,
+        }
+        defaults.update(kwargs)
+
+        return BookDetail.objects.create(**defaults)
+
+    return create_book_detail
+
+
+@pytest.fixture
+def comment_factory(db, user_factory, book_factory):
+    counter = {"value": 0}
+
+    def create_comment(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "user" not in kwargs:
+            kwargs["user"] = user_factory()
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        defaults = {
+            "body": f"This is comment number {index}.",
+            "status": Comment.COMMENT_STATUS_WAITING,
+        }
+        defaults.update(kwargs)
+
+        return Comment.objects.create(**defaults)
+
+    return create_comment
+
+
+@pytest.fixture
+def favorite_factory(db, user_factory, book_factory):
+    counter = {"value": 0}
+
+    def create_favorite(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "user" not in kwargs:
+            kwargs["user"] = user_factory()
+
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        return Favorite.objects.create(**kwargs)
+
+    return create_favorite
+
+
+@pytest.fixture
+def rating_factory(db, user_factory, book_factory):
+    counter = {"value": 0}
+
+    def create_rating(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "user" not in kwargs:
+            kwargs["user"] = user_factory()
+
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        defaults = {
+            "score": 5,
+        }
+        defaults.update(kwargs)
+
+        return Rating.objects.create(**defaults)
+
+    return create_rating
 
 
 # =========== Users ===========

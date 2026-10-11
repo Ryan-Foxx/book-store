@@ -2,9 +2,13 @@ from apps.books.models import (
     Author,
     Award,
     Book,
+    BookDetail,
     Category,
+    Comment,
+    Favorite,
     Language,
     Publisher,
+    Rating,
     Translator,
 )
 from django.contrib import admin
@@ -178,4 +182,100 @@ class BookAdmin(admin.ModelAdmin):
 
     list_per_page = 10
     search_fields = ("name",)
+    ordering = ("-created_at",)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    model = Comment
+
+    list_display = (
+        "id",
+        "user",
+        "book",
+        "body",
+        "status",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "status",
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user__username", "book__name")
+    ordering = ("-created_at",)
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    model = Favorite
+
+    list_display = (
+        "id",
+        "user",
+        "book",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user__username", "book__name")
+    ordering = ("-created_at",)
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    model = Rating
+
+    list_display = (
+        "id",
+        "user",
+        "book",
+        "score",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user__username", "book__name")
+    ordering = ("-created_at",)
+
+
+@admin.register(BookDetail)
+class BookDetailAdmin(admin.ModelAdmin):
+    model = BookDetail
+
+    list_display = (
+        "id",
+        "book",
+        "order",
+        "section_type",
+        "text",
+        "image",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "section_type",
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("book__name",)
     ordering = ("-created_at",)

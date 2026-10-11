@@ -10,3 +10,4 @@ class BooksConfig(AppConfig):
         import apps.books.signals.translator_avatar
         import apps.books.signals.publisher_avatar
         import apps.books.signals.book_avatar
+        import apps.books.signals.book_detail_image
