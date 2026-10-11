@@ -4,8 +4,10 @@ from apps.books.utils.paths import (
     publisher_avatar_upload_path,
     translator_avatar_upload_path,
 )
+from django.contrib.auth import get_user_model
 from django.db import models
 
+User = get_user_model()
 
 # Create your models here.
 class Author(models.Model):
@@ -90,3 +92,20 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    COMMENT_STATUS_WAITING = "w"
+    COMMENT_STATUS_APPROVED = "a"
+    COMMENT_STATUS_NOT_APPROVED = "na"
+    COMMENT_STATUS = [
+        (COMMENT_STATUS_WAITING, "Waiting"),
+        (COMMENT_STATUS_APPROVED, "Approved"),
+        (COMMENT_STATUS_NOT_APPROVED, "Not Approved"),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="comments")
+    body = models.TextField()
+    status = models.CharField(max_length=2, choices=COMMENT_STATUS, default=COMMENT_STATUS_WAITING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)

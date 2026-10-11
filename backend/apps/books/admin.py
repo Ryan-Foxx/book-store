@@ -3,6 +3,7 @@ from apps.books.models import (
     Award,
     Book,
     Category,
+    Comment,
     Language,
     Publisher,
     Translator,
@@ -178,4 +179,29 @@ class BookAdmin(admin.ModelAdmin):
 
     list_per_page = 10
     search_fields = ("name",)
+    ordering = ("-created_at",)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    model = Comment
+
+    list_display = (
+        "id",
+        "user",
+        "book",
+        "body",
+        "status",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "status",
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user__username", "book__name")
     ordering = ("-created_at",)
