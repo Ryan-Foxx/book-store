@@ -8,6 +8,7 @@ from apps.books.models import (
     BookDetail,
     Category,
     Comment,
+    Favorite,
     Language,
     Publisher,
     Translator,
@@ -245,6 +246,25 @@ def comment_factory(db, user_factory, book_factory):
         return Comment.objects.create(**defaults)
 
     return create_comment
+
+
+@pytest.fixture
+def favorite_factory(db, user_factory, book_factory):
+    counter = {"value": 0}
+
+    def create_favorite(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "user" not in kwargs:
+            kwargs["user"] = user_factory()
+
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        return Favorite.objects.create(**kwargs)
+
+    return create_favorite
 
 
 # =========== Users ===========
