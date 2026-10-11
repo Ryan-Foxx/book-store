@@ -7,6 +7,7 @@ from apps.books.models import (
     Book,
     BookDetail,
     Category,
+    Comment,
     Language,
     Publisher,
     Translator,
@@ -220,6 +221,30 @@ def book_detail_factory(db, book_factory):
         return BookDetail.objects.create(**defaults)
 
     return create_book_detail
+
+
+@pytest.fixture
+def comment_factory(db, user_factory, book_factory):
+    counter = {"value": 0}
+
+    def create_comment(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "user" not in kwargs:
+            kwargs["user"] = user_factory()
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        defaults = {
+            "body": f"This is comment number {index}.",
+            "status": Comment.COMMENT_STATUS_WAITING,
+        }
+        defaults.update(kwargs)
+
+        return Comment.objects.create(**defaults)
+
+    return create_comment
 
 
 # =========== Users ===========
