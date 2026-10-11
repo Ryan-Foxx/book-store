@@ -1,7 +1,9 @@
+import NavBar from "@/app/layouts/MainLayout/components/NavBar";
+
 function Header() {
     return (
         <>
-            <div>Header</div>
+            <NavBar />
         </>
     );
 }
