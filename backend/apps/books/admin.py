@@ -4,6 +4,7 @@ from apps.books.models import (
     Book,
     Category,
     Comment,
+    Favorite,
     Language,
     Publisher,
     Translator,
@@ -198,6 +199,28 @@ class CommentAdmin(admin.ModelAdmin):
 
     list_filter = (
         "status",
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user__username", "book__name")
+    ordering = ("-created_at",)
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    model = Favorite
+
+    list_display = (
+        "id",
+        "user",
+        "book",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
         "created_at",
         "modified_at",
     )
