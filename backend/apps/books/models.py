@@ -1,6 +1,7 @@
 from apps.books.utils.paths import (
     author_avatar_upload_path,
     book_avatar_upload_path,
+    book_detail_image_upload_path,
     publisher_avatar_upload_path,
     translator_avatar_upload_path,
 )
@@ -93,6 +94,27 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BookDetail(models.Model):
+    SECTION_TYPE_TEXT = "text"
+    SECTION_TYPE_IMAGE = "image"
+
+    SECTION_TYPES = [
+        (SECTION_TYPE_TEXT, "Text"),
+        (SECTION_TYPE_IMAGE, "Image"),
+    ]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="details")
+    order = models.PositiveSmallIntegerField(default=0)
+    section_type = models.CharField(max_length=5, choices=SECTION_TYPES)
+    text = models.TextField(blank=True)
+    image = models.ImageField(upload_to=book_detail_image_upload_path, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.book.name} - {self.section_type} #{self.order}"
 
 
 class Comment(models.Model):

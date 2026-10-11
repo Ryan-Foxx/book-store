@@ -2,6 +2,7 @@ from apps.books.models import (
     Author,
     Award,
     Book,
+    BookDetail,
     Category,
     Comment,
     Favorite,
@@ -251,4 +252,30 @@ class RatingAdmin(admin.ModelAdmin):
 
     list_per_page = 10
     search_fields = ("user__username", "book__name")
+    ordering = ("-created_at",)
+
+
+@admin.register(BookDetail)
+class BookDetailAdmin(admin.ModelAdmin):
+    model = BookDetail
+
+    list_display = (
+        "id",
+        "book",
+        "order",
+        "section_type",
+        "text",
+        "image",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "section_type",
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("book__name",)
     ordering = ("-created_at",)
