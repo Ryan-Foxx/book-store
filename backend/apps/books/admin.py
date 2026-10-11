@@ -7,6 +7,7 @@ from apps.books.models import (
     Favorite,
     Language,
     Publisher,
+    Rating,
     Translator,
 )
 from django.contrib import admin
@@ -216,6 +217,29 @@ class FavoriteAdmin(admin.ModelAdmin):
         "id",
         "user",
         "book",
+        "created_at",
+        "modified_at",
+    )
+
+    list_filter = (
+        "created_at",
+        "modified_at",
+    )
+
+    list_per_page = 10
+    search_fields = ("user__username", "book__name")
+    ordering = ("-created_at",)
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    model = Rating
+
+    list_display = (
+        "id",
+        "user",
+        "book",
+        "score",
         "created_at",
         "modified_at",
     )

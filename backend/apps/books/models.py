@@ -5,6 +5,7 @@ from apps.books.utils.paths import (
     translator_avatar_upload_path,
 )
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -122,3 +123,17 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.book}"
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ratings")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="ratings")
+    score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "book"], name="unique_books_rating_user_book")]
+
+    def __str__(self):
+        return f"{self.user} rated {self.book} -> {self.score}"
