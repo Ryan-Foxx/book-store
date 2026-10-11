@@ -5,6 +5,7 @@ from apps.books.models import (
     Author,
     Award,
     Book,
+    BookDetail,
     Category,
     Language,
     Publisher,
@@ -195,6 +196,30 @@ def book_factory(db, language_factory):
         return book
 
     return create_book
+
+
+@pytest.fixture
+def book_detail_factory(db, book_factory):
+    counter = {"value": 0}
+
+    def create_book_detail(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        defaults = {
+            "order": index,
+            "section_type": BookDetail.SECTION_TYPE_TEXT,
+            "text": f"Sample detail text {index}",
+            "image": None,
+        }
+        defaults.update(kwargs)
+
+        return BookDetail.objects.create(**defaults)
+
+    return create_book_detail
 
 
 # =========== Users ===========
