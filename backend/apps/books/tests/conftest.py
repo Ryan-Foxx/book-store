@@ -11,6 +11,7 @@ from apps.books.models import (
     Favorite,
     Language,
     Publisher,
+    Rating,
     Translator,
 )
 from django.contrib.auth import get_user_model
@@ -265,6 +266,30 @@ def favorite_factory(db, user_factory, book_factory):
         return Favorite.objects.create(**kwargs)
 
     return create_favorite
+
+
+@pytest.fixture
+def rating_factory(db, user_factory, book_factory):
+    counter = {"value": 0}
+
+    def create_rating(**kwargs):
+        counter["value"] += 1
+        index = counter["value"]
+
+        if "user" not in kwargs:
+            kwargs["user"] = user_factory()
+
+        if "book" not in kwargs:
+            kwargs["book"] = book_factory()
+
+        defaults = {
+            "score": 5,
+        }
+        defaults.update(kwargs)
+
+        return Rating.objects.create(**defaults)
+
+    return create_rating
 
 
 # =========== Users ===========
