@@ -2,6 +2,7 @@ from apps.books.models import Book
 from django.db.models import Avg, Count, DecimalField, Value
 from django.db.models.functions import Coalesce, Round
 
+
 def get_public_book_list_queryset():
     return (
         Book.objects.annotate(
@@ -16,6 +17,7 @@ def get_public_book_list_queryset():
             "name",
             "avatar",
             "price",
+            "language",
         )
         .order_by("-created_at")
     )

@@ -34,12 +34,6 @@ class PublisherSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class LanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Language
-        fields = ("name",)
-
-
 class BookMoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookDetail
@@ -47,21 +41,24 @@ class BookMoreDetailSerializer(serializers.ModelSerializer):
 
 
 class BookListSerializer(serializers.ModelSerializer):
+    # Related Fields
+    language = serializers.CharField(source="language.name", read_only=True)
+
     # Annotate Fields
     rating_average = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Book
-        fields = ("id", "name", "avatar", "price", "rating_average")
+        fields = ("id", "name", "avatar", "price", "language", "rating_average")
 
 
 class BookDetailSerializer(serializers.ModelSerializer):
-    # Nested Fields
+    # Related Fields
     authors = AuthorSerializer(many=True, read_only=True)
     translators = TranslatorSerializer(many=True, read_only=True)
     categories = CategorySerializer(source="category", many=True, read_only=True)
     publisher = PublisherSerializer(read_only=True)
-    language = LanguageSerializer(read_only=True)
+    language = serializers.CharField(source="language.name", read_only=True)
     details = BookMoreDetailSerializer(many=True, read_only=True)
 
     # Custom Method Fields
