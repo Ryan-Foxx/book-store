@@ -1,17 +1,35 @@
 from apps.books.models import Book
-
+from django.db.models import Avg, Count, DecimalField, Value
+from django.db.models.functions import Coalesce, Round
 
 def get_public_book_list_queryset():
-    return Book.objects.only(
-        "id",
-        "name",
-        "avatar",
-        "price",
-    ).order_by("-created_at")
+    return (
+        Book.objects.annotate(
+            rating_average=Coalesce(
+                Round(Avg("ratings__score"), 1),
+                Value(0.0),
+                output_field=DecimalField(max_digits=3, decimal_places=1),
+            )
+        )
+        .only(
+            "id",
+            "name",
+            "avatar",
+            "price",
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_public_book_detail_queryset():
-    return Book.objects.only(
+    return Book.objects.annotate(
+        rating_average=Coalesce(
+            Round(Avg("ratings__score"), 1),
+            Value(0.0),
+            output_field=DecimalField(max_digits=3, decimal_places=1),
+        ),
+        ratings_count=Count("ratings"),
+    ).only(
         "id",
         "name",
         "avatar",

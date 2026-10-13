@@ -47,22 +47,29 @@ class BookMoreDetailSerializer(serializers.ModelSerializer):
 
 
 class BookListSerializer(serializers.ModelSerializer):
+    # Annotate Fields
+    rating_average = serializers.FloatField(read_only=True)
+
     class Meta:
         model = Book
-        fields = ("id", "name", "avatar", "price")
+        fields = ("id", "name", "avatar", "price", "rating_average")
 
 
 class BookDetailSerializer(serializers.ModelSerializer):
+    # Nested Fields
     authors = AuthorSerializer(many=True, read_only=True)
     translators = TranslatorSerializer(many=True, read_only=True)
     categories = CategorySerializer(source="category", many=True, read_only=True)
     publisher = PublisherSerializer(read_only=True)
     language = LanguageSerializer(read_only=True)
-
     details = BookMoreDetailSerializer(many=True, read_only=True)
 
-    # Custom Method Field
+    # Custom Method Fields
     is_favorited = serializers.SerializerMethodField()
+
+    # Annotate Fields
+    rating_average = serializers.FloatField(read_only=True)
+    ratings_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Book
@@ -75,6 +82,8 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "publication_date",
             "inventory",
             "is_favorited",
+            "rating_average",
+            "ratings_count",
             "details",
             "authors",
             "translators",
