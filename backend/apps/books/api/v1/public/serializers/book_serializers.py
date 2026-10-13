@@ -3,7 +3,6 @@ from apps.books.models import (
     Book,
     BookDetail,
     Category,
-    Language,
     Publisher,
     Translator,
 )
@@ -61,12 +60,11 @@ class BookDetailSerializer(serializers.ModelSerializer):
     language = serializers.CharField(source="language.name", read_only=True)
     details = BookMoreDetailSerializer(many=True, read_only=True)
 
-    # Custom Method Fields
-    is_favorited = serializers.SerializerMethodField()
 
     # Annotate Fields
     rating_average = serializers.FloatField(read_only=True)
     ratings_count = serializers.IntegerField(read_only=True)
+    is_favorited = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Book
@@ -88,11 +86,3 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "publisher",
             "language",
         )
-
-    def get_is_favorited(self, book: Book):
-        request = self.context.get("request")
-        if not request or not request.user.is_authenticated:
-            return False
-
-        favorite_book_ids = self.context.get("favorite_book_ids", set())
-        return book.id in favorite_book_ids

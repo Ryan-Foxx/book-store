@@ -1,5 +1,5 @@
-from apps.books.models import Book, BookDetail
-from django.db.models import Avg, Count, DecimalField, Prefetch, Value
+from apps.books.models import Book, BookDetail, Favorite
+from django.db.models import Avg, Count, DecimalField, Exists, OuterRef, Prefetch, Value
 from django.db.models.functions import Coalesce, Round
 
 
@@ -24,17 +24,27 @@ def get_public_book_list_queryset():
     )
 
 
-def get_public_book_detail_queryset():
-    return (
-        Book.objects.annotate(
-            rating_average=Coalesce(
-                Round(Avg("ratings__score"), 1),
-                Value(0.0),
-                output_field=DecimalField(max_digits=3, decimal_places=1),
-            ),
-            ratings_count=Count("ratings"),
+def get_public_book_detail_queryset(user=None):
+    queryset = Book.objects.annotate(
+        rating_average=Coalesce(
+            Round(Avg("ratings__score"), 1),
+            Value(0.0),
+            output_field=DecimalField(max_digits=3, decimal_places=1),
+        ),
+        ratings_count=Count("ratings"),
+    )
+
+    if user and user.is_authenticated:
+        favorite_subquery = Favorite.objects.filter(
+            user=user,
+            book=OuterRef("pk"),
         )
-        .select_related("publisher", "language")
+        queryset = queryset.annotate(is_favorited=Exists(favorite_subquery))
+    else:
+        queryset = queryset.annotate(is_favorited=Value(False))
+
+    return (
+        queryset.select_related("publisher", "language")
         .prefetch_related(
             "authors",
             "translators",
