@@ -1,6 +1,7 @@
 from apps.books.models import (
     Author,
     Book,
+    BookDetail,
     Category,
     Language,
     Publisher,
@@ -39,6 +40,12 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = ("name",)
 
 
+class BookMoreDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookDetail
+        fields = ("id", "order", "section_type", "text", "image")
+
+
 class BookListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
@@ -52,6 +59,8 @@ class BookDetailSerializer(serializers.ModelSerializer):
     publisher = PublisherSerializer(read_only=True)
     language = LanguageSerializer(read_only=True)
 
+    details = BookMoreDetailSerializer(many=True, read_only=True)
+
     class Meta:
         model = Book
         fields = (
@@ -62,6 +71,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "number_of_pages",
             "publication_date",
             "inventory",
+            "details",
             "authors",
             "translators",
             "categories",
