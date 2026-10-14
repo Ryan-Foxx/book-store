@@ -18,7 +18,7 @@ def get_public_book_list_queryset():
             "name",
             "avatar",
             "price",
-            "language",
+            "language__name",
         )
         .order_by("-created_at")
     )
@@ -58,11 +58,8 @@ def get_public_book_detail_queryset(user=None):
             "price",
             "number_of_pages",
             "publication_date",
-            "authors",
-            "translators",
-            "category",
-            "publisher",
-            "language",
             "inventory",
+            "publisher__name",
+            "language__name",
         )
     )
