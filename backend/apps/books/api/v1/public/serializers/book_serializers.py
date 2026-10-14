@@ -75,6 +75,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "price",
             "number_of_pages",
             "publication_date",
+            "language",
             "inventory",
             "is_favorited",
             "rating_average",
@@ -84,5 +85,4 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "translators",
             "categories",
             "publisher",
-            "language",
         )
