@@ -5,7 +5,8 @@ from django.db.models.functions import Coalesce, Round
 
 def get_public_book_list_queryset():
     return (
-        Book.objects.annotate(
+        Book.objects.filter(is_active=True)
+        .annotate(
             rating_average=Coalesce(
                 Round(Avg("ratings__score"), 1),
                 Value(0.0),
@@ -25,7 +26,7 @@ def get_public_book_list_queryset():
 
 
 def get_public_book_detail_queryset(user=None):
-    queryset = Book.objects.annotate(
+    queryset = Book.objects.filter(is_active=True).annotate(
         rating_average=Coalesce(
             Round(Avg("ratings__score"), 1),
             Value(0.0),
