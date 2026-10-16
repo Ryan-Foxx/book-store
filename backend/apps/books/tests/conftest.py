@@ -385,6 +385,19 @@ def public_category_detail_url():
     return url
 
 
+@pytest.fixture
+def public_book_list_url():
+    return reverse("public-book-list")
+
+
+@pytest.fixture
+def public_book_detail_url():
+    def url(book_id):
+        return reverse("public-book-detail", kwargs={"pk": book_id})
+
+    return url
+
+
 # =========== Admin Routes ===========
 @pytest.fixture
 def admin_author_list_url():
