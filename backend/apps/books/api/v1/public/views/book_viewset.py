@@ -8,10 +8,15 @@ from apps.books.selectors.book_selectors import (
     get_public_book_detail_queryset,
     get_public_book_list_queryset,
 )
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 
 # Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all books", tags=["Public - Books"], auth=[]),
+    retrieve=extend_schema(summary="Retrieve book details", tags=["Public - Books"], auth=[]),
+)
 class BookViewSet(ReadOnlyModelViewSet):
     pagination_class = BookPagination
     filterset_class = BookFilter
