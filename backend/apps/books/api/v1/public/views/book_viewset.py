@@ -1,0 +1,32 @@
+from apps.books.api.v1.public.filters.book_filters import BookFilter
+from apps.books.api.v1.public.pagination.book_pagination import BookPagination
+from apps.books.api.v1.public.serializers.book_serializers import (
+    BookDetailSerializer,
+    BookListSerializer,
+)
+from apps.books.selectors.book_selectors import (
+    get_public_book_detail_queryset,
+    get_public_book_list_queryset,
+)
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
+
+# Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all books", tags=["Public - Books"], auth=[]),
+    retrieve=extend_schema(summary="Retrieve book details", tags=["Public - Books"], auth=[]),
+)
+class BookViewSet(ReadOnlyModelViewSet):
+    pagination_class = BookPagination
+    filterset_class = BookFilter
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return BookListSerializer
+        return BookDetailSerializer
+
+    def get_queryset(self):
+        if self.action == "list":
+            return get_public_book_list_queryset()
+        return get_public_book_detail_queryset(user=self.request.user)
