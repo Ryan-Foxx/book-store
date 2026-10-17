@@ -1,3 +1,4 @@
+from apps.books.api.v1.admin.pagination.book_pagination import BookPagination
 from apps.books.api.v1.admin.serializers.book_serializers import (
     BookReadSerializer,
     BookSerializer,
@@ -8,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
 class BookViewSet(ModelViewSet):
+    pagination_class = BookPagination
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
