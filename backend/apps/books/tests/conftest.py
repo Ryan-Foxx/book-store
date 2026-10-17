@@ -475,3 +475,16 @@ def admin_language_detail_url():
         return reverse("admin-language-detail", kwargs={"pk": language_id})
 
     return url
+
+
+@pytest.fixture
+def admin_book_list_url():
+    return reverse("admin-book-list")
+
+
+@pytest.fixture
+def admin_book_detail_url():
+    def url(book_id):
+        return reverse("admin-book-detail", kwargs={"pk": book_id})
+
+    return url
