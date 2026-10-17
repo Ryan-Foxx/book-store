@@ -7,10 +7,19 @@ from apps.books.api.v1.admin.serializers.book_serializers import (
 )
 from apps.books.selectors.book_selectors import get_admin_book_queryset
 from core.permissions import IsOwner
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.viewsets import ModelViewSet
 
 
 # Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all books", tags=["Admin - Books"]),
+    create=extend_schema(summary="Create a new book", tags=["Admin - Books"]),
+    retrieve=extend_schema(summary="Retrieve book details", tags=["Admin - Books"]),
+    update=extend_schema(summary="Update an book", tags=["Admin - Books"]),
+    partial_update=extend_schema(summary="Partially update an book", tags=["Admin - Books"]),
+    destroy=extend_schema(summary="Delete an book", tags=["Admin - Books"]),
+)
 class BookViewSet(ModelViewSet):
     permission_classes = [IsOwner | IsAdmin]
     pagination_class = BookPagination
