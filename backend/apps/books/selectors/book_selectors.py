@@ -67,4 +67,9 @@ def get_public_book_detail_queryset(user=None):
 
 
 def get_admin_book_queryset():
-    return Book.objects.all().order_by("-modified_at")
+    return (
+        Book.objects.all()
+        .order_by("-modified_at")
+        .select_related("publisher", "language")
+        .prefetch_related("authors", "translators", "category")
+    )
