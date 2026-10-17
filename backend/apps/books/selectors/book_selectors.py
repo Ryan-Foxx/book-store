@@ -64,3 +64,7 @@ def get_public_book_detail_queryset(user=None):
             "language__name",
         )
     )
+
+
+def get_admin_book_queryset():
+    return Book.objects.all().order_by("-modified_at")

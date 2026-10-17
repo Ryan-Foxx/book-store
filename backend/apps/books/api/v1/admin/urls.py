@@ -1,5 +1,6 @@
 from apps.books.api.v1.admin.views.author_viewset import AuthorViewSet
 from apps.books.api.v1.admin.views.award_viewset import AwardViewSet
+from apps.books.api.v1.admin.views.book_viewset import BookViewSet
 from apps.books.api.v1.admin.views.category_viewset import CategoryViewSet
 from apps.books.api.v1.admin.views.language_viewset import LanguageViewSet
 from apps.books.api.v1.admin.views.publisher_viewset import PublisherViewSet
@@ -14,6 +15,7 @@ router.register("translators", TranslatorViewSet, basename="admin-translator")
 router.register("publishers", PublisherViewSet, basename="admin-publisher")
 router.register("categories", CategoryViewSet, basename="admin-category")
 router.register("languages", LanguageViewSet, basename="admin-language")
+router.register("books", BookViewSet, basename="admin-book")
 
 urlpatterns = [
     path("", include(router.urls)),
