@@ -8,6 +8,7 @@ from apps.books.selectors.comment_selectors import (
     get_public_comment_queryset,
 )
 from apps.books.services.comment_services import create_comment
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -15,6 +16,10 @@ from rest_framework.viewsets import GenericViewSet
 
 
 # Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all approved comments", tags=["Public - Comments"], auth=[]),
+    create=extend_schema(summary="Create a new comment", tags=["Public - Comments"]),
+)
 class CommentViewSet(CreateModelMixin, ListModelMixin, GenericViewSet):
 
     pagination_class = CommentPagination
