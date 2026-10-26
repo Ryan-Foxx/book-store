@@ -398,6 +398,11 @@ def public_book_detail_url():
     return url
 
 
+@pytest.fixture
+def public_comment_list_url():
+    return lambda book_id: f"/api/v1/public/books/{book_id}/comments/"
+
+
 # =========== Admin Routes ===========
 @pytest.fixture
 def admin_author_list_url():
