@@ -1,3 +1,4 @@
+from apps.books.api.v1.public.pagination.comment_pagination import CommentPagination
 from apps.books.api.v1.public.serializers.comment_serializers import (
     CommentCreateSerializer,
     CommentListSerializer,
@@ -15,6 +16,8 @@ from rest_framework.viewsets import GenericViewSet
 
 # Create your views here.
 class CommentViewSet(CreateModelMixin, ListModelMixin, GenericViewSet):
+
+    pagination_class = CommentPagination
 
     def get_permissions(self):
         if self.action == "create":
