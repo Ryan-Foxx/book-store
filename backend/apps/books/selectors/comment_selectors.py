@@ -22,7 +22,16 @@ def get_admin_comment_list_queryset():
     return (
         Comment.objects.all()
         .select_related("user", "user__profile", "book")
-        .only("id", "user__username", "user__profile__avatar", "book__name", "body", "created_at", "modified_at")
+        .only(
+            "id",
+            "user__username",
+            "user__profile__avatar",
+            "book__name",
+            "body",
+            "status",
+            "created_at",
+            "modified_at",
+        )
         .order_by("-modified_at")
     )
 
