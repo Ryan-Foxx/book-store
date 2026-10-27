@@ -19,7 +19,12 @@ def get_public_comment_queryset():
 
 
 def get_admin_comment_list_queryset():
-    return Comment.objects.all().order_by("-modified_at")
+    return (
+        Comment.objects.all()
+        .select_related("user", "user__profile", "book")
+        .only("id", "user__username", "user__profile__avatar", "book__name", "body", "created_at", "modified_at")
+        .order_by("-modified_at")
+    )
 
 
 def get_admin_comment_queryset():
