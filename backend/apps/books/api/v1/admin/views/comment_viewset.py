@@ -1,0 +1,22 @@
+from apps.books.api.v1.admin.serializers.comment_serializers import (
+    CommentCreateSerializer,
+    CommentReadSerializer,
+)
+from apps.books.selectors.comment_selectors import (
+    get_admin_comment_list_queryset,
+    get_admin_comment_queryset,
+)
+from rest_framework.viewsets import ModelViewSet
+
+
+# Create your views here.
+class CommentViewSet(ModelViewSet):
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return CommentReadSerializer
+        return CommentCreateSerializer
+
+    def get_queryset(self):
+        if self.action in ["list", "retrieve"]:
+            return get_admin_comment_list_queryset()
+        return get_admin_comment_queryset()
