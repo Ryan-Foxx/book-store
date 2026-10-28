@@ -10,10 +10,19 @@ from apps.books.selectors.comment_selectors import (
     get_admin_comment_queryset,
 )
 from core.permissions import IsOwner
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.viewsets import ModelViewSet
 
 
 # Create your views here.
+@extend_schema_view(
+    list=extend_schema(summary="List all comments", tags=["Admin - Comments"]),
+    create=extend_schema(summary="Create a new comment", tags=["Admin - Comments"]),
+    retrieve=extend_schema(summary="Retrieve comment details", tags=["Admin - Comments"]),
+    update=extend_schema(summary="Update an comment", tags=["Admin - Comments"]),
+    partial_update=extend_schema(summary="Partially update an comment", tags=["Admin - Comments"]),
+    destroy=extend_schema(summary="Delete an comment", tags=["Admin - Comments"]),
+)
 class CommentViewSet(ModelViewSet):
     permission_classes = [IsOwner | IsAdmin]
     pagination_class = CommentPagination
