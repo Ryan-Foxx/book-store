@@ -493,3 +493,16 @@ def admin_book_detail_url():
         return reverse("admin-book-detail", kwargs={"pk": book_id})
 
     return url
+
+
+@pytest.fixture
+def admin_comment_list_url():
+    return reverse("admin-comment-list")
+
+
+@pytest.fixture
+def admin_comment_detail_url():
+    def url(comment_id):
+        return reverse("admin-comment-detail", kwargs={"pk": comment_id})
+
+    return url
