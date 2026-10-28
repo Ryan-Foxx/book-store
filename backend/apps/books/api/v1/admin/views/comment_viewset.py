@@ -1,3 +1,4 @@
+from apps.books.api.v1.admin.filters.comment_filters import CommentFilter
 from apps.books.api.v1.admin.pagination.comment_pagination import CommentPagination
 from apps.books.api.v1.admin.serializers.comment_serializers import (
     CommentCreateSerializer,
@@ -13,6 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 # Create your views here.
 class CommentViewSet(ModelViewSet):
     pagination_class = CommentPagination
+    filterset_class = CommentFilter
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
