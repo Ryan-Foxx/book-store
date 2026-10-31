@@ -4,19 +4,21 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 User = get_user_model()
 
 
-class CustomUserCreateSerializer(UserCreateSerializer):
+class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         fields = ("id", "username", "password", "email", "first_name", "last_name", "phone_number")
 
 
-class CustomUserSerializer(UserSerializer):
+class UserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = User
         fields = ("id", "username", "email", "first_name", "last_name", "phone_number", "role")
+        read_only_fields = fields
 
 
-class CustomCurrentUserSerializer(UserSerializer):
+class CurrentUserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = User
         fields = ("id", "username", "email", "first_name", "last_name", "phone_number", "role")
+        read_only_fields = fields

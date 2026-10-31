@@ -9,12 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "email", "phone_number", "username", "first_name", "last_name", "role")
-        read_only_fields = ("id", "email", "phone_number", "role")
+        read_only_fields = ("id", "email", "phone_number", "username", "role")
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
-    # Nested Serializer Fields
     user = UserSerializer()
 
     class Meta:

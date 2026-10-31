@@ -174,26 +174,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'apps.users.api.v1.throttles.StrictUserRateThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        # global
-        'anon': env.str('THROTTLE_ANON_RATE', '100/hour'),
-        'user': env.str('THROTTLE_USER_RATE', '1000/day'),
-
-        # auth
-        "register": env.str('REGISTER_RATE_THROTTLE', '5/hour'),
-        "login": env.str('LOGIN_RATE_THROTTLE', '5/min'),
-        "activation": env.str('ACTIVATION_RATE_THROTTLE', '10/min'),
-        "resend_activation": env.str('RESEND_ACTIVATION_RATE_THROTTLE', '5/hour'),
-        "reset_password": env.str('RESET_PASSWORD_RATE_THROTTLE', '5/hour'),
-        "reset_password_confirm": env.str('RESET_PASSWORD_CONFIRM_RATE_THROTTLE', '10/min'),
-        "reset_username": env.str('RESET_USERNAME_RATE_THROTTLE', '5/hour'),
-        "set_password": env.str('SET_PASSWORD_RATE_THROTTLE', '5/min'),
-        "set_username": env.str('SET_USERNAME_RATE_THROTTLE', '5/min'),
-    },
 }
 
 # DRF_SPECTACULAR SETTINGS
@@ -245,9 +225,9 @@ DJOSER = {
     "USERNAME_RESET_CONFIRM_URL": env.str("DJOSER_USERNAME_RESET_CONFIRM_URL", "reset-username/{uid}/{token}"),
     "ACTIVATION_URL": env.str("DJOSER_ACTIVATION_URL", "activate/{uid}/{token}"),
     "SERIALIZERS": {
-        "user_create": "apps.users.api.v1.serializers.user.CustomUserCreateSerializer",
-        "user": "apps.users.api.v1.serializers.user.CustomUserSerializer",
-        "current_user": "apps.users.api.v1.serializers.user.CustomCurrentUserSerializer",
+        "user_create": "apps.users.api.v1.serializers.djoser_serializers.UserCreateSerializer",
+        "user": "apps.users.api.v1.serializers.djoser_serializers.UserSerializer",
+        "current_user": "apps.users.api.v1.serializers.djoser_serializers.CurrentUserSerializer",
     },
 }
 
