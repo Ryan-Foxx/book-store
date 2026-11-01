@@ -6,8 +6,5 @@ class UsersConfig(AppConfig):
     name = 'apps.users'
 
     def ready(self):
-        import apps.users.signals.active_change
-        import apps.users.signals.create_user_profile
-        import apps.users.signals.password_change
-        import apps.users.signals.role_change
-        import apps.users.signals.user_profile_avatar
+        import apps.users.signals.user_signals
+        import apps.users.signals.user_profile_signals
