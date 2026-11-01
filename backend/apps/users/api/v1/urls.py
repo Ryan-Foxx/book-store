@@ -1,4 +1,4 @@
-from apps.users.api.v1.views.custom_djoser_viewset import CustomUserViewSet
+from apps.users.api.v1.views.custom_djoser_viewsets import CustomUserViewSet
 from apps.users.api.v1.views.logout_views import LogoutView
 from apps.users.api.v1.views.user_profile_views import UserProfileView
 from django.urls import include, path
