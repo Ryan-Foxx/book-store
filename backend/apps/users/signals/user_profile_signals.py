@@ -1,44 +1,55 @@
 from apps.users.models import UserProfile
-from django.db.models.signals import post_delete, pre_save
+from django.db import transaction
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 
 
 @receiver(pre_save, sender=UserProfile)
-def delete_old_avatar_on_change(sender, instance, **kwargs):
+def stage_old_avatar_for_deletion(sender, instance, raw=False, **kwargs):
     """
-    Delete previous avatar file when a new one is uploaded.
+    Identify and stage the old avatar file path if it is being replaced or removed.
     """
 
-    if not instance.pk:
+    if raw or not instance.pk:
         return
 
     try:
-        old = sender.objects.get(pk=instance.pk)
+        old_profile = sender.objects.only("avatar").get(pk=instance.pk)
     except sender.DoesNotExist:
         return
 
-    if not old.avatar:
+    old_avatar = old_profile.avatar
+    # If old avatar exists and is different from the incoming one, stage for deletion
+    if old_avatar and old_avatar != instance.avatar:
+        instance._old_avatar_name = old_avatar.name
+        instance._avatar_storage = old_avatar.storage
+
+
+@receiver(post_save, sender=UserProfile)
+def cleanup_old_avatar_on_commit(sender, instance, raw=False, **kwargs):
+    """
+    Delete the replaced avatar file from storage only after the DB transaction succeeds.
+    """
+    if raw:
         return
 
-    if old.avatar == instance.avatar:
-        return
+    old_avatar_name = getattr(instance, "_old_avatar_name", None)
+    storage = getattr(instance, "_avatar_storage", None)
 
-    storage = old.avatar.storage
-
-    if storage.exists(old.avatar.name):
-        storage.delete(old.avatar.name)
+    if old_avatar_name and storage:
+        transaction.on_commit(lambda: storage.delete(old_avatar_name) if storage.exists(old_avatar_name) else None)
 
 
 @receiver(post_delete, sender=UserProfile)
-def delete_avatar_on_profile_delete(sender, instance, **kwargs):
+def delete_avatar_on_profile_delete(sender, instance, raw=False, **kwargs):
     """
-    Delete avatar file from storage when a UserProfile is deleted.
+    Delete avatar file from storage when a UserProfile is deleted, deferred to on_commit.
     """
 
-    if not instance.avatar:
+    if raw or not instance.avatar:
         return
 
     storage = instance.avatar.storage
+    avatar_name = instance.avatar.name
 
-    if storage.exists(instance.avatar.name):
-        storage.delete(instance.avatar.name)
+    transaction.on_commit(lambda: storage.delete(avatar_name) if storage.exists(avatar_name) else None)

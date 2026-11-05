@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import User, UserProfile
 
-# Register your models here.
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """
@@ -76,5 +76,12 @@ class UserProfileAdmin(admin.ModelAdmin):
     )
 
     list_per_page = 10
-    search_fields = ("user",)
+    # Fixed: Query across User relations rather than referencing the relation directly
+    search_fields = (
+        "user__username",
+        "user__email",
+        "user__phone_number",
+        "user__first_name",
+        "user__last_name",
+    )
     ordering = ("-created_at",)

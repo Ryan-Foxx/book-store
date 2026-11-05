@@ -1,6 +1,6 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 
 
@@ -8,7 +8,7 @@ class CustomUserViewSet(DjoserUserViewSet):
     """
     Subclassed UserViewSet from Djoser to selectively disable unused endpoints:
     - GET /users/ (list)
-    - GET, PUT, PATCH, DELETE /users/id/
+    - GET, PUT, PATCH, DELETE /users/{id}/
     - GET, PUT, PATCH, DELETE /users/me/
     """
 
@@ -33,5 +33,6 @@ class CustomUserViewSet(DjoserUserViewSet):
         raise NotFound()
 
     @extend_schema(exclude=True)
+    @action(["get", "put", "patch", "delete"], detail=False)
     def me(self, request, *args, **kwargs):
         raise NotFound()

@@ -241,6 +241,12 @@ SIMPLE_JWT = {
     "SIGNING_KEY": env.str("JWT_SIGNING_KEY", SECRET_KEY),
     "ALGORITHM": env.str("JWT_ALGORITHM", "HS256"),
     "UPDATE_LAST_LOGIN": env.bool("JWT_UPDATE_LAST_LOGIN", True),
+    # Validates user's password hash in payload: immediate invalidation on password change
+    "CHECK_REVOKE_TOKEN": env.bool("JWT_CHECK_REVOKE_TOKEN", True),
+    # Refuses access tokens immediately if user is_active becomes False
+    "CHECK_USER_IS_ACTIVE": env.bool("JWT_CHECK_USER_IS_ACTIVE", True),
+    "USER_ID_FIELD": env.str("JWT_USER_ID_FIELD", "id"),
+    "USER_ID_CLAIM": env.str("JWT_USER_ID_CLAIM", "user_id")
 }
 
 # Email Settings Config

@@ -1,33 +1,43 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class LogoutSerializer(serializers.Serializer):
     """
-    Serializer responsible for invalidating (blacklisting) a refresh token.
-
-    The client must send the refresh token that should be invalidated.
-    Once blacklisted, the token can no longer be used to obtain new
-    access tokens via the refresh endpoint.
-
-    Example request body:
-
-    {
-        "refresh": "your_refresh_token_here"
-    }
+    Serializer responsible for validating token ownership and blacklisting
+    the provided refresh token.
     """
 
     refresh = serializers.CharField(write_only=True)
 
-    def save(self, **kwargs):
-        """
-        Blacklist the provided refresh token.
+    def validate(self, attrs):
+        refresh_str = attrs.get("refresh")
+        request = self.context.get("request")
 
-        If the token is invalid, expired, or already blacklisted,
-        the exception is ignored to keep the logout operation
-        idempotent (safe to call multiple times).
-        """
         try:
-            RefreshToken(self.validated_data["refresh"]).blacklist()
+            token = RefreshToken(refresh_str)
+        except (TokenError, InvalidToken):
+            raise ValidationError({"refresh": "The refresh token is invalid or expired."})
+
+        # Ensure the token belongs to the requesting authenticated user
+        user_id_claim = api_settings.USER_ID_CLAIM
+        token_user_id = token.payload.get(user_id_claim)
+
+        user_id_field = api_settings.USER_ID_FIELD
+        request_user_id = getattr(request.user, user_id_field)
+
+        if str(token_user_id) != str(request_user_id):
+            raise AuthenticationFailed("This token does not belong to the authenticated user.")
+
+        attrs["token_instance"] = token
+        return attrs
+
+    def save(self, **kwargs):
+        token = self.validated_data["token_instance"]
+        try:
+            token.blacklist()
         except TokenError:
+            # Token may have already been blacklisted; keep operation idempotent
             pass
