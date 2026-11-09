@@ -22,11 +22,11 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    # Django And DRF Routes
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
 
-    path("api/v1/", include("apps.users.api.v1.urls")),
-    
+    # Development Apps Routes
     path("api/v1/", include("api.v1.urls")),
     
     # Api Documentation

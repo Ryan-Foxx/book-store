@@ -30,6 +30,9 @@ class User(AbstractUser):
     def clean(self):
         super().clean()
 
+        if self.email:
+            self.email = self.email.strip().lower()
+
         # Normalize phone number before validation/storage
         if self.phone_number:
             self.phone_number = normalize_ir_mobile(self.phone_number)
@@ -54,21 +57,33 @@ class User(AbstractUser):
         if self.role == self.ROLE_CHOICE_OWNER:
             self.is_superuser = True
             self.is_staff = True
-
         elif self.role == self.ROLE_CHOICE_ADMIN:
             self.is_superuser = False
             self.is_staff = True
-
         else:  # customer
             self.is_superuser = False
             self.is_staff = False
 
     def save(self, *args, **kwargs):
         """
-        Ensure model validation and role-permission synchronization
-        are always applied before saving.
+        Ensure normalization, role-permission synchronization, and model validation
+        are applied before saving, even when update_fields is explicitly passed.
         """
+
+        if self.phone_number:
+            self.phone_number = normalize_ir_mobile(self.phone_number)
+
+        self._sync_role_permissions()
         self.full_clean()
+
+        # Ensure derived security flags are saved when updating role via update_fields
+        update_fields = kwargs.get("update_fields")
+        if update_fields is not None:
+            update_fields = set(update_fields)
+            if "role" in update_fields:
+                update_fields.update({"is_staff", "is_superuser"})
+            kwargs["update_fields"] = update_fields
+
         super().save(*args, **kwargs)
 
     objects = UserManager()
