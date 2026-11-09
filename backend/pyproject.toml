@@ -21,7 +21,7 @@ dependencies = [
     "djoser==2.3.3",
     "drf-nested-routers==0.95.3",
     "drf-spectacular>=0.30.0",
-    "environs==14.5.0",
+    "environs==15.2.0",
     "gunicorn==23.0.0",
     "idna==3.11",
     "marshmallow==4.1.1",
