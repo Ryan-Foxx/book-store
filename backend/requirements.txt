@@ -16,6 +16,8 @@ djoser==2.3.5
 drf-nested-routers==0.95.3
 drf-spectacular==0.30.0
 environs==15.2.0
+factory-boy==3.3.3
+faker==40.44.0
 gunicorn==26.2.0
 idna==3.11
 inflection==0.5.1
