@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'debug_toolbar',
     'drf_spectacular',
+    'drf_spectacular_sidecar',
     'dj_control_room_base',
     'dj_celery_panel',
     'dj_redis_panel',
@@ -190,6 +191,9 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': True,
     'SCHEMA_PATH_PREFIX': r'/api/v[0-9]+',
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
 
     'APPEND_COMPONENTS': {
         'securitySchemes': {
