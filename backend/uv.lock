@@ -102,7 +102,7 @@ requires-dist = [
     { name = "djangorestframework-simplejwt", specifier = "==5.5.1" },
     { name = "djoser", specifier = "==2.3.5" },
     { name = "drf-nested-routers", specifier = "==0.95.3" },
-    { name = "drf-spectacular", specifier = ">=0.30.0" },
+    { name = "drf-spectacular", specifier = "==0.30.0" },
     { name = "environs", specifier = "==15.2.0" },
     { name = "factory-boy", specifier = "==3.3.3" },
     { name = "faker", specifier = "==40.44.0" },
