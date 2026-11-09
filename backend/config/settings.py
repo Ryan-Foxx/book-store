@@ -59,6 +59,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'debug_toolbar',
     'drf_spectacular',
+    'dj_control_room_base',
+    'dj_celery_panel',
+    'dj_redis_panel',
+    'dj_cache_panel',
+    'dj_urls_panel',
+    'dj_signals_panel',
+    'dj_control_room',
 ]
 
 MIDDLEWARE = [

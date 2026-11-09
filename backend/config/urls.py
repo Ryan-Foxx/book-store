@@ -22,6 +22,14 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    # Django Control Room Routes
+    path("admin/dj-control-room-base/", include("dj_control_room_base.urls")),
+    path("admin/dj-redis-panel/", include("dj_redis_panel.urls")),
+    path("admin/dj-cache-panel/", include("dj_cache_panel.urls")),
+    path("admin/dj-celery-panel/", include("dj_celery_panel.urls")),
+    path("admin/dj-signals-panel/", include("dj_signals_panel.urls")),
+    path("admin/dj-control-room/", include("dj_control_room.urls")),
+
     # Django And DRF Routes
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
