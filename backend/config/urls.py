@@ -19,19 +19,28 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
+    # Django Control Room Routes
+    path("admin/dj-control-room-base/", include("dj_control_room_base.urls")),
+    path("admin/dj-redis-panel/", include("dj_redis_panel.urls")),
+    path("admin/dj-cache-panel/", include("dj_cache_panel.urls")),
+    path("admin/dj-celery-panel/", include("dj_celery_panel.urls")),
+    path("admin/dj-signals-panel/", include("dj_signals_panel.urls")),
+    path("admin/dj-control-room/", include("dj_control_room.urls")),
+
     # Django And DRF Routes
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
 
     # Development Apps Routes
     path("api/v1/", include("api.v1.urls")),
-    
-    # Api Documentation
+
+    # Api Documentation Routes
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ] + debug_toolbar_urls()
 
